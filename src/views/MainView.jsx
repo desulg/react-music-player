@@ -5,12 +5,18 @@ import propTypes from 'prop-types';
 import AddSongs from '../components/AddSongs';
 import SongList from '../components/SongList';
 import NowPlaying from '../components/NowPlaying';
-import { togglePlaying, nowPlayingPage, addSongs } from '../actions';
+import CueSong from '../components/CueSong';
+import AddCommentForm from '../components/AddCommentForm';
+import {
+  togglePlaying, nowPlayingPage, addSongs, addCue, addComment,
+} from '../actions';
 
 const mapDispatchToProps = dispatch => ({
   toggle: () => dispatch(togglePlaying()),
   openNowPlaying: () => dispatch(nowPlayingPage()),
   addSongs: songs => dispatch(addSongs(songs)),
+  addCue: () => dispatch(addCue()),
+  addComment: comment => dispatch(addComment(comment)),
 });
 
 class MainView extends Component {
@@ -25,6 +31,7 @@ class MainView extends Component {
     const {
       songs, playState, openNowPlaying, openSnackbar, currentTime, addSongs: add, toggle,
     } = this.props;
+
     return (
       <div
         onDragOver={this.handleDragOver}
@@ -41,6 +48,18 @@ class MainView extends Component {
       >
         <SongList songs={songs} />
         <AddSongs />
+        <CueSong
+          songs={songs}
+          playingSong={songs[playState.songId]}
+          currentTime={currentTime}
+          addCue={addCue}
+        />
+        <AddSongs />
+        <AddCommentForm
+          playingSong={songs[playState.songId]}
+          songId={playState.songId}
+          currentTime={currentTime}
+        />
         <NowPlaying
           togglePlaying={toggle}
           playState={playState}
@@ -57,6 +76,7 @@ MainView.propTypes = {
   openNowPlaying: propTypes.func.isRequired,
   toggle: propTypes.func.isRequired,
   addSongs: propTypes.func.isRequired,
+  addComment: propTypes.func.isRequired,
   songs: propTypes.arrayOf(propTypes.any).isRequired,
   playState: propTypes.objectOf(propTypes.any).isRequired,
   currentTime: propTypes.number.isRequired,

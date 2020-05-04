@@ -9,6 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import MoreVert from '@material-ui/icons/MoreVert';
 import MusicNote from '@material-ui/icons/MusicNote';
 
+
 const Song = ({ song, handleClick, handleIconClick }) => (
   <ListItem className="song" onClick={handleClick}>
     <ListItemAvatar>
@@ -27,7 +28,6 @@ const Song = ({ song, handleClick, handleIconClick }) => (
     </ListItemSecondaryAction>
   </ListItem>
 );
-
 Song.propTypes = {
   song: PropTypes.objectOf(PropTypes.any).isRequired,
   handleClick: PropTypes.func.isRequired,

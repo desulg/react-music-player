@@ -5,6 +5,8 @@
       "browser": true
     },
     "rules": {
-      "import/prefer-default-export": "off"
+      "import/prefer-default-export": "off",
+      "linebreak-style": ["error", "windows"],
+      "react/destructuring-assignment": [true, "always"]
     }
   }

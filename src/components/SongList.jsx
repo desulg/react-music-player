@@ -5,7 +5,6 @@ import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import { removeSong, playSong } from '../actions';
 import Song from './Song';
 

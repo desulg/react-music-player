@@ -27,12 +27,14 @@ getState().then((localState) => {
   } else {
     store = createStore(reducers, localState);
   }
+
   mediaNotification.setStore(store);
   store.subscribe(() => {
     saveState({
       songs: store.getState().songs,
     });
   });
+  console.log('store get store', store.getState());
   ReactDOM.render(
     // eslint-disable-next-line
     <Provider store={store}>

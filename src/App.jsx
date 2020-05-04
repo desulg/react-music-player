@@ -10,7 +10,6 @@ import Header from './components/Header';
 import PlayingView from './views/PlayingView';
 import keyboardEvents from './utils/keyboardEvents';
 
-
 const mapStateToProps = state => ({
   page: state.page,
   songs: state.songs,
@@ -130,8 +129,14 @@ class App extends Component {
   }
 
   updateTime = () => {
+    // if (time) {
+    //   console.log(time);
+    // } else {
+    // console.log('audioplayer', this.audioPlayer);
     const currentTime = 100 * this.audioPlayer.currentTime / this.audioPlayer.duration || 0;
+    // console.log('currentTime', currentTime);
     this.setState({ currentTime });
+    // }
   }
 
   playSong = (id) => {

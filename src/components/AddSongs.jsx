@@ -10,6 +10,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class AddSongs extends Component {
+  // It happens after song is being added
   addSong = (e) => {
     const { addSongs: add } = this.props;
     add(e.currentTarget.files);
@@ -23,7 +24,7 @@ class AddSongs extends Component {
         component="label"
         htmlFor="song-input"
         style={{
-          position: 'fixed', bottom: '110px', right: '25px', zIndex: 3000,
+          position: 'fixed', bottom: '170px', right: '25px', zIndex: 3000,
         }}
       >
         <input

@@ -1,3 +1,4 @@
+/* eslint linebreak-style: ["error", "windows"] */
 import mediaSession from '../utils/media-session';
 
 export const ADD_SONGS = 'ADD_SONGS';
@@ -12,6 +13,11 @@ export const REPEAT = 'REPEAT';
 export const HOME_PAGE = 'HOME_PAGE';
 export const SETTINGS_PAGE = 'SETTINGS_PAGE';
 export const NOW_PLAYING_PAGE = 'NOW_PLAYING_PAGE';
+export const ADD_CUE = 'ADD_CUE';
+export const REMOVE_CUE = 'REMOVE_CUE';
+export const ADD_COMMENT = 'ADD_COMMENT';
+export const REMOVE_COMMENT = 'REMOVE_COMMENT';
+
 
 export const addSongs = songs => ({
   type: ADD_SONGS,
@@ -59,4 +65,24 @@ export const nowPlayingPage = () => ({
 
 export const settingsPage = () => ({
   type: SETTINGS_PAGE,
+});
+
+export const addCue = id => ({
+  type: ADD_CUE,
+  id,
+});
+
+export const removeCue = id => ({
+  type: REMOVE_CUE,
+  id,
+});
+
+export const addComment = comment => ({
+  type: ADD_COMMENT,
+  comment,
+});
+
+export const removeComment = comment => ({
+  type: REMOVE_COMMENT,
+  comment,
 });
