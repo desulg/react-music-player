@@ -17,8 +17,10 @@ const muiTheme = createMuiTheme({
   palette: {
     primary: deepPurple,
   },
+  typography: {
+    useNextVariants: true,
+  },
 });
-
 
 getState().then((localState) => {
   let store;
@@ -34,7 +36,6 @@ getState().then((localState) => {
       songs: store.getState().songs,
     });
   });
-  console.log('store get store', store.getState());
   ReactDOM.render(
     // eslint-disable-next-line
     <Provider store={store}>

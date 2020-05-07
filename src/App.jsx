@@ -26,18 +26,23 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      seconds: 0,
+      running: false,
       currentTime: 0,
+      elapsedTime: 0,
       snackBarOpen: false,
       hasRejectedInstall: false,
       snackMsg: '',
       hideSnackAction: false,
       installEvent: null,
       addToHomeScreenUIVisible: false,
+      commentDisplayCount: 0,
     };
   }
 
   componentDidMount() {
     const { songs, toggle } = this.props;
+    this.interval = setInterval(this.updateTime);
     if (songs[0]) {
       this.audioPlayer.src = URL.createObjectURL(songs[0]);
     }
@@ -61,14 +66,24 @@ class App extends Component {
       if (!nextProps.playState.playing) {
         // PAUSE
         this.audioPlayer.pause();
+        this.setState({
+          running: false,
+        });
       } else if (nextProps.playState.songId === -1) {
         this.playSong(0);
       } else if (nextProps.playState.songId === playState.songId) {
         // RESUME
         console.log('Should only resume');
+        this.setState({
+          running: true,
+        });
         this.audioPlayer.play();
         // Start playing
       } else {
+        this.setState({
+          running: true,
+          previousTime: Date.now(),
+        });
         this.playSong(nextProps.playState.songId);
       }
       if (installEvent && !hasRejectedInstall) {
@@ -97,6 +112,7 @@ class App extends Component {
 
   componentWillUnmount() {
     this.releaseKeyboardEvents();
+    clearInterval(this.interval);
   }
 
   playNext = () => {
@@ -111,6 +127,11 @@ class App extends Component {
       songs, playState, repeatType, playSong: play,
     } = this.props;
     // No repeat
+    this.setState({
+      elapsedTime: 0,
+      previousTime: Date.now(),
+      seconds: 0,
+    });
     if (repeatType === 0) {
       URL.revokeObjectURL(songs[playState.songId]);
       if (playState.songId < songs.length - 1) play(playState.songId + 1);
@@ -129,14 +150,18 @@ class App extends Component {
   }
 
   updateTime = () => {
-    // if (time) {
-    //   console.log(time);
-    // } else {
-    // console.log('audioplayer', this.audioPlayer);
+    if (this.state.running) {
+      const now = Date.now();
+      this.setState(prevState => ({
+        elapsedTime: prevState.elapsedTime + (now - prevState.previousTime),
+        previousTime: Date.now(),
+        seconds: Math.floor(prevState.elapsedTime / 1000),
+      }));
+    }
+    // console.log('state in app JSX', this.state);
+    // console.log('this.audioPlayer.duration', this.audioPlayer.duration);
     const currentTime = 100 * this.audioPlayer.currentTime / this.audioPlayer.duration || 0;
-    // console.log('currentTime', currentTime);
     this.setState({ currentTime });
-    // }
   }
 
   playSong = (id) => {
@@ -158,16 +183,44 @@ class App extends Component {
   }
 
   handleRequestClose = () => {
-    this.setState({ snackBarOpen: false, snackMsg: '', hideSnackAction: false });
+    this.setState({
+      snackBarOpen: false,
+      snackMsg: '',
+      hideSnackAction: false,
+      commentDisplayCount: 0,
+    });
+  }
+
+  displayComment = (comment) => {
+    this.setState({
+      commentDisplayCount: 1,
+      snackBarOpen: true,
+      hideSnackAction: true,
+      snackMsg: comment.comment,
+    });
   }
 
   render() {
     const {
       currentTime, snackBarOpen, snackMsg, installEvent, addToHomeScreenUIVisible, hideSnackAction,
+      seconds, running, commentDisplayCount,
     } = this.state;
     const {
       songs, playState, toggle, repeatType, page,
     } = this.props;
+
+    // console.log('STATEEEE', this.state);
+    // console.log('PROPSS', this.props);
+    if (running === true && songs.comments) {
+      const playingSongLastModified = songs[playState.songId].lastModified;
+      songs.comments.map((comment) => {
+        if (comment.songId === playingSongLastModified) {
+          if (comment.seconds === seconds && commentDisplayCount === 0) {
+            this.displayComment(comment);
+          }
+        }
+      });
+    }
     return (
       <>
         <Header
@@ -193,6 +246,7 @@ class App extends Component {
               timeDrag={this.timeDrag}
               installEvent={installEvent}
               currentTime={currentTime}
+              seconds={seconds}
               playPrevious={this.playPrevious}
               playingSong={songs[playState.songId]}
               openSnackbar={msg => this.setState({ snackBarOpen: true, snackMsg: msg })}
@@ -202,6 +256,7 @@ class App extends Component {
               songs={songs}
               toggle={toggle}
               playState={playState}
+              seconds={seconds}
               currentTime={currentTime}
               openSnackbar={msg => this.setState({ snackBarOpen: true, snackMsg: msg })}
             />

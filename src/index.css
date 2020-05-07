@@ -77,6 +77,7 @@ body {
 /* ADD COMMENT FORM */
 .add-comment-container {
   position: fixed;
+  z-index: 500;
   bottom: 90px;
   width: 100%;
   border-top: 1px solid;
@@ -85,6 +86,7 @@ body {
 }
 .add-comment-form form {
   display: flex;
+  background-color: white;
 }
   .add-comment-form input[type=text] {
     flex-grow: 1;
@@ -99,6 +101,7 @@ body {
     color: rgba(0, 0, 0, 0.85);
     letter-spacing: 2px;
     outline: none;
+    transition: 0.3s;
   }
 
   .add-comment-form input[type=text]::-webkit-input-placeholder{
@@ -123,6 +126,7 @@ body {
     font-weight: bold;
     text-shadow: none;
     text-transform: uppercase;
+    transition: 0.3s;
   }
 
   .add-comment-form input[type=submit]:hover{
@@ -130,3 +134,14 @@ body {
     color: #fafafa;
     cursor: pointer;
   }
+.comment{
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.comment-list-item-avatar{
+  margin-left: 30px;
+}
+
+.song-list{
+  padding-block-end: 73px
+}
