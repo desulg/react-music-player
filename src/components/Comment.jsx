@@ -9,25 +9,28 @@ import Avatar from '@material-ui/core/Avatar';
 import MoreVert from '@material-ui/icons/MoreVert';
 import CommentIcon from '@material-ui/icons/Comment';
 
-
-const Comment = ({ comment, handleClick, handleIconClick }) => (
-  <ListItem className="comment" onClick={handleClick}>
-    <ListItemAvatar className="comment-list-item-avatar">
-      <Avatar>
-        <CommentIcon />
-      </Avatar>
-    </ListItemAvatar>
-    <ListItemText
-      primary={comment.comment}
-      secondary={comment.seconds}
-    />
-    <ListItemSecondaryAction onClick={handleIconClick}>
-      <IconButton aria-label="Delete">
-        <MoreVert />
-      </IconButton>
-    </ListItemSecondaryAction>
-  </ListItem>
-);
+const Comment = ({ comment, handleClick, handleIconClick }) => {
+  const minutes = Math.floor(comment.seconds / 60);
+  const remainingSeconds = comment.seconds - minutes * 60;
+  return (
+    <ListItem className="comment" onClick={handleClick}>
+      <ListItemAvatar className="comment-list-item-avatar">
+        <Avatar>
+          <CommentIcon />
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={comment.comment}
+        secondary={`Timestamp: ${minutes}:${remainingSeconds}`}
+      />
+      <ListItemSecondaryAction onClick={handleIconClick}>
+        <IconButton aria-label="Delete">
+          <MoreVert />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+  );
+};
 Comment.propTypes = {
   comment: PropTypes.objectOf(PropTypes.any).isRequired,
   handleClick: PropTypes.func.isRequired,

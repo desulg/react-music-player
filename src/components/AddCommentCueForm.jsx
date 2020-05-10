@@ -9,7 +9,7 @@ const mapDispatchToProps = dispatch => ({
   addCue: cue => dispatch(addCue(cue)),
 });
 
-class AddCommentForm extends Component {
+class AddCommentCueForm extends Component {
   state = {
     comment: '',
     buttonText: 'Add Cue',
@@ -66,8 +66,12 @@ class AddCommentForm extends Component {
       currentTime: this.props.currentTime,
       seconds: this.props.seconds,
     };
+    console.log('addcomment comment', comment);
     this.props.addComment(comment);
-    this.setState({ comment: '' });
+    this.setState({
+      comment: '',
+      buttonText: 'Add Cue',
+    });
   };
 
   render() {
@@ -88,7 +92,7 @@ class AddCommentForm extends Component {
   }
 }
 
-AddCommentForm.propTypes = {
+AddCommentCueForm.propTypes = {
   currentTime: PropTypes.number.isRequired,
   songId: PropTypes.number.isRequired,
   addComment: PropTypes.func.isRequired,
@@ -97,8 +101,8 @@ AddCommentForm.propTypes = {
   addCue: PropTypes.func.isRequired,
 };
 
-AddCommentForm.defaultProps = {
+AddCommentCueForm.defaultProps = {
   playingSong: null,
 };
 
-export default connect(null, mapDispatchToProps)(AddCommentForm);
+export default connect(null, mapDispatchToProps)(AddCommentCueForm);

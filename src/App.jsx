@@ -27,6 +27,7 @@ class App extends Component {
     super(props);
     this.state = {
       seconds: 0,
+      playFromTimeSeconds: 0,
       running: false,
       currentTime: 0,
       elapsedTime: 0,
@@ -66,18 +67,29 @@ class App extends Component {
       if (!nextProps.playState.playing) {
         // PAUSE
         this.audioPlayer.pause();
-        this.setState({
+        console.log(this.state.elapsedTime);
+        this.setState(prevState => ({
           running: false,
-        });
+          playFromTimeSeconds: nextProps.playState.seconds,
+          elapsedTime: prevState.elapsedTime,
+        }));
       } else if (nextProps.playState.songId === -1) {
         this.playSong(0);
-      } else if (nextProps.playState.songId === playState.songId) {
         // RESUME
-        console.log('Should only resume');
-        this.setState({
-          running: true,
-        });
-        this.audioPlayer.play();
+      } else if (nextProps.playState.songId === playState.songId) {
+        const resumeFrom = {
+          time: nextProps.playState.currentTime,
+          seconds: nextProps.playState.seconds,
+        };
+        this.playFromTime(resumeFrom);
+        // Start playing from comment
+      } else if (nextProps.playState.currentTime > 0) {
+        const commentTime = {
+          comment: nextProps.playState.comment,
+          time: nextProps.playState.currentTime,
+          seconds: nextProps.playState.seconds,
+        };
+        this.playFromTime(commentTime);
         // Start playing
       } else {
         this.setState({
@@ -131,6 +143,7 @@ class App extends Component {
       elapsedTime: 0,
       previousTime: Date.now(),
       seconds: 0,
+      playFromTimeSeconds: 0,
     });
     if (repeatType === 0) {
       URL.revokeObjectURL(songs[playState.songId]);
@@ -149,19 +162,36 @@ class App extends Component {
     play(prevSongId);
   }
 
+  playFromTime = (commentTime) => {
+    console.log('COMMENTTIME', commentTime);
+    this.setState({
+      previousTime: Date.now(),
+      running: true,
+      playFromTimeSeconds: commentTime.seconds,
+      elapsedTime: 0,
+      seconds: commentTime.seconds,
+      currentTime: commentTime.time,
+    });
+    if (commentTime.comment) {
+      this.displayComment(commentTime.comment);
+    }
+    this.audioPlayer.currentTime = this.audioPlayer.duration * (commentTime.time / 100);
+    this.audioPlayer.play();
+  }
+
   updateTime = () => {
     if (this.state.running) {
       const now = Date.now();
+      // const currentTime = 100 * this.audioPlayer.currentTime / this.audioPlayer.duration || 0;
       this.setState(prevState => ({
         elapsedTime: prevState.elapsedTime + (now - prevState.previousTime),
         previousTime: Date.now(),
-        seconds: Math.floor(prevState.elapsedTime / 1000),
+        seconds: prevState.playFromTimeSeconds + Math.floor(prevState.elapsedTime / 1000),
+        currentTime: 100 * this.audioPlayer.currentTime / this.audioPlayer.duration || 0,
       }));
+      // this.setState({ currentTime });
+      console.log('updateTime? => ', this.state);
     }
-    // console.log('state in app JSX', this.state);
-    // console.log('this.audioPlayer.duration', this.audioPlayer.duration);
-    const currentTime = 100 * this.audioPlayer.currentTime / this.audioPlayer.duration || 0;
-    this.setState({ currentTime });
   }
 
   playSong = (id) => {
@@ -192,11 +222,12 @@ class App extends Component {
   }
 
   displayComment = (comment) => {
+    console.log(comment);
     this.setState({
       commentDisplayCount: 1,
       snackBarOpen: true,
       hideSnackAction: true,
-      snackMsg: comment.comment,
+      snackMsg: comment,
     });
   }
 
@@ -209,14 +240,18 @@ class App extends Component {
       songs, playState, toggle, repeatType, page,
     } = this.props;
 
-    // console.log('STATEEEE', this.state);
+    // PLAY FROM COMMENT doesn't trigger seconds running from that time
+    // REGULAR PLAY start second count normally
+    // PAUSE doesn't stop seconds
+
+    // console.log('SECONDSS', seconds);
     // console.log('PROPSS', this.props);
     if (running === true && songs.comments) {
       const playingSongLastModified = songs[playState.songId].lastModified;
       songs.comments.map((comment) => {
         if (comment.songId === playingSongLastModified) {
           if (comment.seconds === seconds && commentDisplayCount === 0) {
-            this.displayComment(comment);
+            this.displayComment(comment.comment);
           }
         }
       });
@@ -287,6 +322,9 @@ App.propTypes = {
   playState: PropTypes.shape({
     playing: PropTypes.bool.isRequired,
     songId: PropTypes.number.isRequired,
+    currentTime: PropTypes.number.isRequired,
+    seconds: PropTypes.number.isRequired,
+    comment: PropTypes.string,
   }).isRequired,
   repeatType: PropTypes.oneOf([0, 1, 2]).isRequired,
   toggle: PropTypes.func.isRequired,

@@ -8,15 +8,33 @@ const initalState = {
 export default (state = initalState, action) => {
   switch (action.type) {
     case PLAY_SONG: {
-      return { playing: true, songId: action.id };
+      return { playing: true, songId: action.id, currentTime: 0 };
     }
     case PLAY_FROM_COMMENT: {
-      console.log('state', state);
-      console.log('action', action);
-      return { playing: true };
+      const currTime = action.comment.currentTime;
+      const id = action.comment.songId;
+      const commentTime = {
+        playing: true,
+        songId: id,
+        currentTime: currTime,
+        comment: action.comment.comment,
+        seconds: action.comment.seconds,
+      };
+      return commentTime;
     }
     case TOGGLE_PLAYING: {
-      return Object.assign({}, state, { playing: !state.playing });
+      // Handle seconds here maybe?
+      console.log(action);
+      // const playState = {
+      //   currentTime: action.toggleState.currentTime,
+      //   seconds: action.toggleState.seconds,
+      //   playing: !state.playing,
+      // };
+      return Object.assign({}, state, {
+        playing: !state.playing,
+        currentTime: action.toggleState.currentTime,
+        seconds: action.toggleState.seconds,
+      });
     }
     default: {
       return state;

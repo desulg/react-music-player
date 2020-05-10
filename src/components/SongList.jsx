@@ -15,12 +15,12 @@ import Comment from './Comment';
 const mapDispatchToProps = dispatch => ({
   remove: id => dispatch(removeSong(id)),
   play: id => dispatch(playSong(id)),
-  playFromComment: comment => dispatch(playFromComment(comment)),
+  commentPlay: comment => dispatch(playFromComment(comment)),
   commentRemove: id => dispatch(removeComment(id)),
 });
 
 const SongList = ({
-  songs, remove, play, commentRemove,
+  songs, remove, play, commentRemove, commentPlay,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -50,7 +50,15 @@ const SongList = ({
   };
 
   const handleSongClick = ind => () => play(ind);
-  const handleCommentClick = commentInd => () => playFromComment(commentInd);
+  const handleCommentClick = (comment, songInd) => () => {
+    const commentAndSongInd = {
+      comment: comment.comment,
+      currentTime: comment.currentTime,
+      seconds: comment.seconds,
+      songId: songInd,
+    };
+    commentPlay(commentAndSongInd);
+  };
 
   console.log('SongList===>', songs);
   // iterate through comments and add comment to each song and songId should be lastmodifieddate
@@ -82,7 +90,7 @@ const SongList = ({
                       [
                         <Comment
                           key={`comment-${comment.comment}`}
-                          handleClick={handleCommentClick(songInd)}
+                          handleClick={handleCommentClick(comment, songInd)}
                           handleIconClick={setActiveItem(comment, commentInd)}
                           comment={comment}
                         />,
@@ -127,6 +135,7 @@ SongList.propTypes = {
   play: PropTypes.func.isRequired,
   songs: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)).isRequired,
   commentRemove: PropTypes.func.isRequired,
+  commentPlay: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(SongList);

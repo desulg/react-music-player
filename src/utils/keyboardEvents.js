@@ -15,7 +15,7 @@ export default function keyboardEvents(handlers) {
     const {
       playNext,
       playPrevious,
-      togglePlaying,
+      // togglePlaying,
     } = handlers;
 
     switch (upperCaseKey) {
@@ -25,9 +25,9 @@ export default function keyboardEvents(handlers) {
       case 'ARROWRIGHT':
         playNext();
         break;
-      case 'SPACE':
-        togglePlaying();
-        break;
+      // case 'SPACE':
+      //   togglePlaying();
+      //   break;
       default:
         break;
     }

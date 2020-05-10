@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 import AddSongs from '../components/AddSongs';
 import SongList from '../components/SongList';
 import NowPlaying from '../components/NowPlaying';
-import AddCommentForm from '../components/AddCommentForm';
+import AddCommentCueForm from '../components/AddCommentCueForm';
 import {
   togglePlaying, nowPlayingPage, addSongs, addCue, addComment,
 } from '../actions';
 
 const mapDispatchToProps = dispatch => ({
-  toggle: () => dispatch(togglePlaying()),
+  toggle: playState => dispatch(togglePlaying(playState)),
   openNowPlaying: () => dispatch(nowPlayingPage()),
   addSongs: songs => dispatch(addSongs(songs)),
   addCue: cue => dispatch(addCue(cue)),
@@ -49,7 +49,7 @@ class MainView extends Component {
         <AddSongs />
 
         <div className="song-list">
-          <AddCommentForm
+          <AddCommentCueForm
             playingSong={songs[playState.songId]}
             songId={playState.songId}
             seconds={seconds}

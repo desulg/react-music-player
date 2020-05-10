@@ -43,8 +43,9 @@ export const repeatType = id => ({
   id,
 });
 
-export const togglePlaying = () => ({
+export const togglePlaying = toggleState => ({
   type: TOGGLE_PLAYING,
+  toggleState,
 });
 
 export const toggleSidebar = () => ({

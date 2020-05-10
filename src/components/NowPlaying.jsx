@@ -9,12 +9,21 @@ import PlayIcon from '@material-ui/icons/PlayCircleFilled';
 import Avatar from '@material-ui/core/Avatar';
 
 const NowPlaying = ({
-  playState, playingSong, currentTime, togglePlaying, openNowPlaying,
+  playState, playingSong, currentTime, togglePlaying, openNowPlaying, seconds,
 }) => {
   const handleClick = (e) => {
     if (!e.target.closest('[type="button"]') && playingSong) {
       openNowPlaying();
     }
+  };
+  const onToggleClick = () => {
+    console.log(currentTime);
+    console.log(seconds);
+    const toggleState = {
+      currentTime,
+      seconds,
+    };
+    togglePlaying(toggleState);
   };
 
   return (
@@ -27,7 +36,7 @@ const NowPlaying = ({
         <div className="song-name">
           {playingSong ? playingSong.name : '[No song]'}
         </div>
-        <button type="button" onClick={togglePlaying}>
+        <button type="button" onClick={onToggleClick}>
           { playState.playing ? <PauseIcon /> : <PlayIcon /> }
         </button>
       </div>
@@ -45,6 +54,7 @@ NowPlaying.propTypes = {
   currentTime: propTypes.number.isRequired,
   togglePlaying: propTypes.func.isRequired,
   openNowPlaying: propTypes.func.isRequired,
+  seconds: propTypes.number.isRequired,
 };
 
 export default NowPlaying;
