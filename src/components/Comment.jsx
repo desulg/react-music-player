@@ -21,7 +21,7 @@ const Comment = ({ comment, handleClick, handleIconClick }) => {
       </ListItemAvatar>
       <ListItemText
         primary={comment.comment}
-        secondary={`Timestamp: ${minutes}:${remainingSeconds}`}
+        secondary={`Ajatempel: ${minutes}:${remainingSeconds}`}
       />
       <ListItemSecondaryAction onClick={handleIconClick}>
         <IconButton aria-label="Delete">

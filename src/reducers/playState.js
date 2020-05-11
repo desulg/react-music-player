@@ -1,4 +1,4 @@
-import { PLAY_SONG, TOGGLE_PLAYING, PLAY_FROM_COMMENT } from '../actions/index';
+import { PLAY_SONG, TOGGLE_PLAYING, PLAY_FROM_TIME } from '../actions/index';
 
 const initalState = {
   playing: false,
@@ -10,26 +10,31 @@ export default (state = initalState, action) => {
     case PLAY_SONG: {
       return { playing: true, songId: action.id, currentTime: 0 };
     }
-    case PLAY_FROM_COMMENT: {
-      const currTime = action.comment.currentTime;
-      const id = action.comment.songId;
-      const commentTime = {
-        playing: true,
-        songId: id,
-        currentTime: currTime,
-        comment: action.comment.comment,
-        seconds: action.comment.seconds,
-      };
-      return commentTime;
+    case PLAY_FROM_TIME: {
+      const currTime = action.commentCue.currentTime;
+      const id = action.commentCue.songId;
+      let commentCue = {};
+      if (action.commentCue.comment) {
+        commentCue = {
+          playing: true,
+          songId: id,
+          currentTime: currTime,
+          comment: action.commentCue.comment,
+          seconds: action.commentCue.seconds,
+          duration: action.commentCue.duration,
+        };
+      } else {
+        commentCue = {
+          playing: true,
+          songId: id,
+          currentTime: currTime,
+          seconds: action.commentCue.seconds,
+          duration: action.commentCue.duration,
+        };
+      }
+      return commentCue;
     }
     case TOGGLE_PLAYING: {
-      // Handle seconds here maybe?
-      console.log(action);
-      // const playState = {
-      //   currentTime: action.toggleState.currentTime,
-      //   seconds: action.toggleState.seconds,
-      //   playing: !state.playing,
-      // };
       return Object.assign({}, state, {
         playing: !state.playing,
         currentTime: action.toggleState.currentTime,

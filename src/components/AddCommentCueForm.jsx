@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addComment, addCue } from '../actions';
-// import Paper from '@material-ui/core/Paper';
 
 const mapDispatchToProps = dispatch => ({
   addComment: comment => dispatch(addComment(comment)),
@@ -32,9 +31,7 @@ class AddCommentCueForm extends Component {
 
   addCommentOrCue = (e) => {
     if (e) e.preventDefault();
-    if (this.props.songId === -1) {
-      console.log('SongId is -1 select a song, can use snackbar maybe');
-    } else {
+    if (this.props.songId !== -1) {
       if (this.state.comment === '') {
         this.addCue();
       }
@@ -45,28 +42,26 @@ class AddCommentCueForm extends Component {
   };
 
   addCue = (e) => {
-    console.log('CUEEEEEE', this.props);
     if (e) e.preventDefault();
     const cue = {
       songId: this.props.playingSong.lastModified,
       currentTime: this.props.currentTime,
       seconds: this.props.seconds,
+      duration: this.props.duration,
     };
     this.props.addCue(cue);
   };
 
 
   addComment = (e) => {
-    console.log('COOMMMEENT', this.props);
-    console.log('COOMMMEENT2222222', this.state);
     if (e) e.preventDefault();
     const comment = {
       comment: this.state.comment,
       songId: this.props.playingSong.lastModified,
       currentTime: this.props.currentTime,
       seconds: this.props.seconds,
+      duration: this.props.duration,
     };
-    console.log('addcomment comment', comment);
     this.props.addComment(comment);
     this.setState({
       comment: '',
@@ -98,6 +93,7 @@ AddCommentCueForm.propTypes = {
   addComment: PropTypes.func.isRequired,
   playingSong: PropTypes.objectOf(PropTypes.any),
   seconds: PropTypes.number.isRequired,
+  duration: PropTypes.number.isRequired,
   addCue: PropTypes.func.isRequired,
 };
 

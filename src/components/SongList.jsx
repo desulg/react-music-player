@@ -7,20 +7,21 @@ import List from '@material-ui/core/List';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import {
-  removeSong, playSong, playFromComment, removeComment,
+  removeSong, playSong, playFromTime, removeComment,
 } from '../actions';
 import Song from './Song';
 import Comment from './Comment';
+import Cue from './Cue';
 
 const mapDispatchToProps = dispatch => ({
   remove: id => dispatch(removeSong(id)),
   play: id => dispatch(playSong(id)),
-  commentPlay: comment => dispatch(playFromComment(comment)),
+  commentCuePlay: commentCue => dispatch(playFromTime(commentCue)),
   commentRemove: id => dispatch(removeComment(id)),
 });
 
 const SongList = ({
-  songs, remove, play, commentRemove, commentPlay,
+  songs, remove, play, commentRemove, commentCuePlay,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -56,8 +57,19 @@ const SongList = ({
       currentTime: comment.currentTime,
       seconds: comment.seconds,
       songId: songInd,
+      duration: comment.duration,
     };
-    commentPlay(commentAndSongInd);
+    commentCuePlay(commentAndSongInd);
+  };
+
+  const handleCueClick = (cue, songInd) => () => {
+    const commentAndSongInd = {
+      currentTime: cue.currentTime,
+      seconds: cue.seconds,
+      songId: songInd,
+      duration: cue.duration,
+    };
+    commentCuePlay(commentAndSongInd);
   };
 
   console.log('SongList===>', songs);
@@ -65,6 +77,99 @@ const SongList = ({
   if (!songs.length) {
     return (
       <h4 style={{ fontWeight: 300, textAlign: 'center' }}>No Songs Present. Please Add Songs</h4>
+    );
+  }
+  if (songs.comments && songs.cues) {
+    return (
+      <div className="song-list">
+        <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+          <MenuItem onClick={() => removeItem()}>Remove Item</MenuItem>
+        </Menu>
+        <List>
+          {
+            songs.map((song, songInd) => (
+              [
+                <Song
+                  key={`song-${song.lastModifiedDate}`}
+                  handleClick={handleSongClick(songInd)}
+                  handleIconClick={setActiveItem(song, songInd)}
+                  song={song}
+                />,
+                <Divider key={`divider-${song.lastModifiedDate}`} />,
+                songs.comments.map((comment, commentInd) => {
+                  if (comment.songId === song.lastModified) {
+                    return (
+                      [
+                        <Comment
+                          key={`comment-${comment.comment}`}
+                          handleClick={handleCommentClick(comment, songInd)}
+                          handleIconClick={setActiveItem(comment, commentInd)}
+                          comment={comment}
+                        />,
+                        <Divider key={`divider-${comment.comment}`} />,
+                      ]
+                    );
+                  }
+                }),
+                songs.cues.map((cue, cueInd) => {
+                  if (cue.songId === song.lastModified) {
+                    return (
+                      [
+                        <Cue
+                          key={`cue-${cue.songId}`}
+                          handleClick={handleCueClick(cue, songInd)}
+                          handleIconClick={setActiveItem(cue, cueInd)}
+                          cue={cue}
+                        />,
+                        <Divider key={`divider-${cue.songId}`} />,
+                      ]
+                    );
+                  }
+                }),
+              ]
+            ))
+          }
+        </List>
+      </div>
+    );
+  }
+  if (songs.cues) {
+    return (
+      <div className="song-list">
+        <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+          <MenuItem onClick={() => removeItem()}>Remove Item</MenuItem>
+        </Menu>
+        <List>
+          {
+            songs.map((song, songInd) => (
+              [
+                <Song
+                  key={`song-${song.lastModifiedDate}`}
+                  handleClick={handleSongClick(songInd)}
+                  handleIconClick={setActiveItem(song, songInd)}
+                  song={song}
+                />,
+                <Divider key={`divider-${song.lastModifiedDate}`} />,
+                songs.cues.map((cue, cueInd) => {
+                  if (cue.songId === song.lastModified) {
+                    return (
+                      [
+                        <Cue
+                          key={`cue-${cue.songId}`}
+                          handleClick={handleCommentClick(cue, songInd)}
+                          handleIconClick={setActiveItem(cue, cueInd)}
+                          cue={cue}
+                        />,
+                        <Divider key={`divider-${cue.songId}`} />,
+                      ]
+                    );
+                  }
+                }),
+              ]
+            ))
+          }
+        </List>
+      </div>
     );
   }
   if (songs.comments) {
@@ -135,7 +240,7 @@ SongList.propTypes = {
   play: PropTypes.func.isRequired,
   songs: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)).isRequired,
   commentRemove: PropTypes.func.isRequired,
-  commentPlay: PropTypes.func.isRequired,
+  commentCuePlay: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(SongList);

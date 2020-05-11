@@ -17,7 +17,7 @@ export const ADD_CUE = 'ADD_CUE';
 export const REMOVE_CUE = 'REMOVE_CUE';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const REMOVE_COMMENT = 'REMOVE_COMMENT';
-export const PLAY_FROM_COMMENT = 'PLAY_FROM_COMMENT';
+export const PLAY_FROM_TIME = 'PLAY_FROM_TIME';
 
 
 export const addSongs = songs => ({
@@ -89,7 +89,7 @@ export const removeComment = id => ({
   id,
 });
 
-export const playFromComment = comment => ({
-  type: PLAY_FROM_COMMENT,
-  comment,
+export const playFromTime = commentCue => ({
+  type: PLAY_FROM_TIME,
+  commentCue,
 });

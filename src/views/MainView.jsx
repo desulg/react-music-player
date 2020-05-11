@@ -28,7 +28,7 @@ class MainView extends Component {
 
   render() {
     const {
-      songs, playState, openNowPlaying, openSnackbar, currentTime, addSongs: add, toggle, seconds,
+      songs, playState, openNowPlaying, openSnackbar, currentTime, addSongs: add, toggle, seconds, duration,
     } = this.props;
     // console.log('sekooonds 2', seconds);
     return (
@@ -53,6 +53,7 @@ class MainView extends Component {
             playingSong={songs[playState.songId]}
             songId={playState.songId}
             seconds={seconds}
+            duration={duration}
             currentTime={currentTime}
           />
           <NowPlaying
@@ -78,6 +79,7 @@ MainView.propTypes = {
   currentTime: PropTypes.number.isRequired,
   openSnackbar: PropTypes.func.isRequired,
   seconds: PropTypes.number.isRequired,
+  duration: PropTypes.number.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(MainView);
