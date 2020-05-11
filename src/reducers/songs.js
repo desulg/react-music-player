@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import {
-  ADD_SONGS, REMOVE_SONGS, ADD_COMMENT, ADD_CUE, REMOVE_COMMENT,
+  ADD_SONGS, REMOVE_SONGS, ADD_COMMENT, ADD_CUE, REMOVE_COMMENT, REMOVE_CUE,
 } from '../actions';
 
 export default (state = [], action) => {
@@ -70,6 +70,13 @@ export default (state = [], action) => {
       }
       const newCueArray = update(
         state, { cues: { $push: [action.cue] } },
+      );
+      return newCueArray;
+    }
+
+    case REMOVE_CUE: {
+      const newCueArray = update(
+        state, { cues: { $splice: [[action.id, 1]] } },
       );
       return newCueArray;
     }

@@ -10,7 +10,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class AddSongs extends Component {
-  // It happens after song is being added
   addSong = (e) => {
     const { addSongs: add } = this.props;
     add(e.currentTarget.files);

@@ -11,7 +11,7 @@ const mapDispatchToProps = dispatch => ({
 class AddCommentCueForm extends Component {
   state = {
     comment: '',
-    buttonText: 'Add Cue',
+    buttonText: 'Lisa Positsioon',
   };
 
   onCommentChange = (e) => {
@@ -19,12 +19,12 @@ class AddCommentCueForm extends Component {
     if (commentText !== '') {
       this.setState({
         comment: commentText,
-        buttonText: 'Add Comment',
+        buttonText: 'Lisa Kommentaar',
       });
     } else {
       this.setState({
         comment: commentText,
-        buttonText: 'Add Cue',
+        buttonText: 'Lisa Positsioon',
       });
     }
   };
@@ -65,7 +65,7 @@ class AddCommentCueForm extends Component {
     this.props.addComment(comment);
     this.setState({
       comment: '',
-      buttonText: 'Add Cue',
+      buttonText: 'Lisa Positsioon',
     });
   };
 
@@ -78,7 +78,7 @@ class AddCommentCueForm extends Component {
             // eslint-disable-next-line
             value={this.state.comment}
             onChange={this.onCommentChange}
-            placeholder="Add Comment..."
+            placeholder="Lisa Kommentaar..."
           />
           <input type="submit" value={this.state.buttonText} />
         </form>

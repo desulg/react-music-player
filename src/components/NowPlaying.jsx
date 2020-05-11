@@ -17,8 +17,6 @@ const NowPlaying = ({
     }
   };
   const onToggleClick = () => {
-    console.log(currentTime);
-    console.log(seconds);
     const toggleState = {
       currentTime,
       seconds,

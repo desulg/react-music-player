@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-// import connect from 'react-redux/es/connect/connect';
 import { connect } from 'react-redux';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import {
-  removeSong, playSong, playFromTime, removeComment,
+  removeSong, playSong, playFromTime, removeComment, removeCue,
 } from '../actions';
 import Song from './Song';
 import Comment from './Comment';
@@ -18,24 +17,30 @@ const mapDispatchToProps = dispatch => ({
   play: id => dispatch(playSong(id)),
   commentCuePlay: commentCue => dispatch(playFromTime(commentCue)),
   commentRemove: id => dispatch(removeComment(id)),
+  cueRemove: id => dispatch(removeCue(id)),
 });
 
 const SongList = ({
-  songs, remove, play, commentRemove, commentCuePlay,
+  songs, remove, play, commentRemove, commentCuePlay, cueRemove,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const [activeSong, setActiveSong] = useState(-1);
 
   const [activeComment, setActiveComment] = useState(-1);
+  
+  const [activeCue, setActiveCue] = useState(-1);
 
   const setActiveItem = (item, ind) => ({ target }) => {
     if (item.comment) {
       setAnchorEl(target);
       setActiveComment(ind);
-    } else {
+    } else if (item.size) {
       setAnchorEl(target);
       setActiveSong(ind);
+    } else {
+      setAnchorEl(target);
+      setActiveCue(ind);
     }
   };
 
@@ -44,8 +49,13 @@ const SongList = ({
       remove(activeSong);
       setActiveSong(-1);
       setAnchorEl(null);
-    } else {
+    } else if (activeComment !== -1) {
       commentRemove(activeComment);
+      setActiveComment(-1);
+      setAnchorEl(null);
+    } else if (activeCue !== -1) {
+      cueRemove(activeComment);
+      setActiveCue(-1);
       setAnchorEl(null);
     }
   };
