@@ -28,7 +28,7 @@ const SongList = ({
   const [activeSong, setActiveSong] = useState(-1);
 
   const [activeComment, setActiveComment] = useState(-1);
-  
+
   const [activeCue, setActiveCue] = useState(-1);
 
   const setActiveItem = (item, ind) => ({ target }) => {
@@ -82,11 +82,9 @@ const SongList = ({
     commentCuePlay(commentAndSongInd);
   };
 
-  console.log('SongList===>', songs);
-  // iterate through comments and add comment to each song and songId should be lastmodifieddate
   if (!songs.length) {
     return (
-      <h4 style={{ fontWeight: 300, textAlign: 'center' }}>No Songs Present. Please Add Songs</h4>
+      <h4 style={{ fontWeight: 300, textAlign: 'center' }}>Lugusid ei ole. Palun lisage lood</h4>
     );
   }
   if (songs.comments && songs.cues) {
@@ -251,6 +249,7 @@ SongList.propTypes = {
   songs: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)).isRequired,
   commentRemove: PropTypes.func.isRequired,
   commentCuePlay: PropTypes.func.isRequired,
+  cueRemove: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(SongList);

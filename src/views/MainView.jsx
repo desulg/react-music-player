@@ -28,7 +28,8 @@ class MainView extends Component {
 
   render() {
     const {
-      songs, playState, openNowPlaying, openSnackbar, currentTime, addSongs: add, toggle, seconds, duration,
+      songs, playState, openNowPlaying, openSnackbar, currentTime,
+      addSongs: add, toggle, seconds, duration,
     } = this.props;
     // console.log('sekooonds 2', seconds);
     return (

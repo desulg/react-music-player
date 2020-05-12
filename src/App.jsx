@@ -106,10 +106,8 @@ class App extends Component {
           if (songs[id]) {
             const fileSrc = URL.createObjectURL(songs[id]);
             this.audioPlayer.src = fileSrc;
-            // this.audioPlayer.play();
             window.document.title = songs[id].name.replace('.mp3', '');
           }
-          // Object.assign(commentCue, { songId: nextProps.playState.songId });
         }
         this.playFromTime(commentCue);
         // Start playing
